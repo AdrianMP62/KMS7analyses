@@ -3,21 +3,18 @@ title: "Kimberley Mound Springs invertebrate analyses"
 author: "Adrian Pinder"
 date and time: '`r Sys.time()`'
 output: html_document
-software: 'RStudio: Version 1.1.463 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`'
+software: 'RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`'
 editor_options: 
   chunk_output_type: console
 ---
 
-RStudio: Version 1.0.136 – © 2009-2016 RStudio Inc. R version: `r getRversion()`  
+RStudio: Version 1.1.456# – © 2009-2018 RStudio, Inc. R version: `r getRversion()`  
 Date and time: `r Sys.time()`
-
 
 Uses the following datafiles:  
 ionic composition mgl.csv (2016-17 ionic composition data)   
 KMS17_invert_data.csv (2017 KMS invertebrate presence/absence data)  
 KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017)  
-
-
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
