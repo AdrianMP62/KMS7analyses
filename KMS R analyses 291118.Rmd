@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-RStudio: Version 1.1.456# – © 2009-2018 RStudio, Inc. R version: `r getRversion()`  
+RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`  
 Date and time: `r Sys.time()`
 
 Uses the following datafiles:  
@@ -24,6 +24,7 @@ set.seed(1234)
 
 ```{r}
 options(scipen=999)
+
 ```
 
 ```{r, message=FALSE, results='hide'}
