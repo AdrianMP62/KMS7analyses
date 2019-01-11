@@ -22,6 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 set.seed(1234)
 ```
 
+
 ```{r}
 options(scipen=999)
 
