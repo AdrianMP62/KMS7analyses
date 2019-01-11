@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-This code available at https://github.com/AdrianMP62  
+This code available at https://github.com/AdrianMP62/KMS7analyses  
 
 RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`  
 Date and time: `r Sys.time()`
