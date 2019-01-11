@@ -14,7 +14,7 @@ RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversio
 Date and time: `r Sys.time()`
 
 Uses the following datafiles:  
-ionic composition mgl.csv (2016-17 ionic composition data)   
+ionic composition mgl.csv (2016-17 ionic composition data) with columns: Year,CO3,Ca,Cl,HCO3,K,Mg,Na,SO4 (values as mg/L) and site codes (KMS01, KMS02 etc.) as row.headings  
 KMS17_invert_data.csv (2017 KMS invertebrate presence/absence data)  
 KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017)  
 
