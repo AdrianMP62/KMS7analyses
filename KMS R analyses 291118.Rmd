@@ -14,9 +14,10 @@ RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversio
 Date and time: `r Sys.time()`
 
 Uses the following datafiles:  
+  
 ionic composition mgl.csv (2016-17 ionic composition data) with columns: Year,CO3,Ca,Cl,HCO3,K,Mg,Na,SO4 (values as mg/L) and site codes (KMS01, KMS02 etc.) as row.headings  
 KMS17_invert_data.csv (2017 KMS invertebrate presence/absence data)  
-KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017)  
+ALL KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017 with columns: "Class","Family","LOWESTID","LOWESTIDNC", then sample headings as year-two digit KMS code-sample type : P = Plankton, B = Benthic, PB = Plankton+Benthic, C = Core. Blanks already replaced with zeros  
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
@@ -181,24 +182,34 @@ print(data2.mds.plot)
 #Richness by major taxonomic group for all Kimberley Springs
 
 ```{r Read species matrix}
-data.rich <- read.csv("KMS-VBM data.csv", stringsAsFactors = FALSE, check.names = FALSE)
+data.rich <- read.csv("ALL KMS-VBM data.csv", stringsAsFactors = FALSE, check.names = FALSE)
 ```
 
 ```{r create new empty matrix for richness values}
-rich.sums <- data.rich[0, 4:43]
-rich.sums[1:12, 1] <- c("protozoans","rotifers","molluscs", "annelids","mites","cladocera","ostracoda","copepoda","amphipoda","shrimps","crabs","insects")
+rich.sums <- data.rich[0, 4:49]
+rich.sums[1:13, 1] <- c("protozoans","other","rotifers","molluscs", "annelids","mites","cladocera","ostracoda","copepoda","amphipoda","shrimps","crabs","insects")
 ```
 
 ```{r use loop to calculte richness values per site for each of the twelve major taxon groups combined into one file}
 row=0
-for (i in c("^B","^J","^K","^L","^M","^OG","^OH","^OJ","^OP","^OT","^OX","^Q"))
+for (i in c("^B","^I","^J","^K","^L","^M","^OG","^OH","^OJ","^OP","^OT","^OX","^Q"))
   {
   data.rich.temp <- data.rich[data.rich$LOWESTIDNC %like% i, ]
-temp <- colSums(data.rich.temp[, 5:43])
+temp <- colSums(data.rich.temp[, 5:49])
 row=row+1
-rich.sums[row, 2:40] <- temp
+rich.sums[row, 2:46] <- temp
 }
 ```
+
+```{r}
+data.rich.temp <- data.rich[data.rich$LOWESTIDNC %like% "^B", ]
+```
+
+
+
+
+
+
 
 ```{r calculate macrocrustacea and microcrustacea richness and delete individual crustacean orders}
 rich.sums[13, 2:40] <- colSums(rich.sums[6:8, 2:40])
