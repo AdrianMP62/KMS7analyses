@@ -68,8 +68,6 @@ Meq.data$CO3 <- Meq.data$CO3*0.0333
 write.csv(Meq.data, "meq-data.csv")
 ```
 
-
-
 ```{r}
 #calculate total anions and cations
 Totals.cations <- rowSums(Meq.data[, colnames(Meq.data) %like% "Na|Ca|Mg|K"])
@@ -134,7 +132,6 @@ AddToTernary(points, Anions[Anions$year %like% "2017", 1:3], pch=21, cex=Meq.per
 ```
 
 
-
 #Multivariate analyses of 2017 data only
 
 <!-- use stringsAsfactors so the 1's are numbers -->
@@ -186,7 +183,7 @@ data.rich <- read.csv("ALL KMS-VBM data.csv", stringsAsFactors = FALSE, check.na
 ```
 
 ```{r create new empty matrix for richness values}
-rich.sums <- data.rich[0, 4:49]
+rich.sums <- data.rich[0, 4:48]
 rich.sums[1:13, 1] <- c("protozoans","other","rotifers","molluscs", "annelids","mites","cladocera","ostracoda","copepoda","amphipoda","shrimps","crabs","insects")
 ```
 
@@ -195,16 +192,16 @@ row=0
 for (i in c("^B","^I","^J","^K","^L","^M","^OG","^OH","^OJ","^OP","^OT","^OX","^Q"))
   {
   data.rich.temp <- data.rich[data.rich$LOWESTIDNC %like% i, ]
-temp <- colSums(data.rich.temp[, 5:49])
+temp <- colSums(data.rich.temp[, 5:48])
 row=row+1
-rich.sums[row, 2:46] <- temp
+rich.sums[row, 2:45] <- temp
 }
 ```
 
 ```{r calculate macrocrustacea and microcrustacea richness and delete individual crustacean orders. Note this assumes cladocerans, ostracods and copepods in rows 7 to 9 - CHECK IF MODIFYING THIS}
-rich.sums[NROW(rich.sums)+1, 2:46] <- colSums(rich.sums[grepl("cladocera|ostracoda|copepoda", rich.sums$LOWESTIDNC), 2:46])
+rich.sums[NROW(rich.sums)+1, 2:NCOL(rich.sums)] <- colSums(rich.sums[grepl("cladocera|ostracoda|copepoda", rich.sums$LOWESTIDNC), 2:45])
 rich.sums[NROW(rich.sums), 1] <- "microcrustacea"
-rich.sums[NROW(rich.sums)+1, 2:46] <- colSums(rich.sums[grepl("amphipoda|shrimps|crabs", rich.sums$LOWESTIDNC), 2:46])
+rich.sums[NROW(rich.sums)+1, 2:NCOL(rich.sums)] <- colSums(rich.sums[grepl("amphipoda|shrimps|crabs", rich.sums$LOWESTIDNC), 2:NCOL(rich.sums)])
 rich.sums[NROW(rich.sums), 1] <- "macrocrustacea"
 rich.sums <-  rich.sums[!grepl("cladocera|ostracoda|copepoda|amphipoda|shrimps|crabs",rich.sums$LOWESTIDNC),] 
 ```
@@ -215,8 +212,9 @@ rich.sums <- rich.sums[, -1]
 rich.sums.list <- liste(t(rich.sums), x="taxon", y="sample", entry="richness")
 ```
 
+##Compositional richness of  benthic samples collected from 1999-2001
 ```{r plot stacked column plot, 1990s}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "1996|1999|2000|2001|2003", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "1996|1999|2000|2001", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
@@ -226,8 +224,9 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "1996|1999|2000|2001|2003", ]
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
-```{r plot stacked column plot, 1993 Halse et al. 1996 data}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "1993", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+##Compositional richness of combined plankton and benthic samples collected in 1993 and 2003
+```{r plot stacked column plot, 1993 Halse et al. 1996 data with the 2003 sample from Kachana}
+ggplot(rich.sums.list[rich.sums.list$sample %like% "1993|2003", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
@@ -237,9 +236,9 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "1993", ], aes(sample, richne
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
-
+##Compositional richness of plankton and benthic samples collected in 2017
 ```{r plot stacked column plot, 2017 benthic/plankton data}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
@@ -249,9 +248,9 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P", ], aes(sampl
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
-
+##Compositional richness of core samples collected in 2016 and 2017
 ```{r plot stacked column plot, 2016 and 2017 core samples}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "2016|2017-C", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "2016|2017-C", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
