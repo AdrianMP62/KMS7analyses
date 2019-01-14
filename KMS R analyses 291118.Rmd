@@ -25,7 +25,6 @@ knitr::opts_chunk$set(echo = TRUE)
 set.seed(1234)
 ```
 
-
 ```{r}
 options(scipen=999)
 
@@ -42,7 +41,6 @@ library(RColorBrewer)
 ```
 
 #Ternary diagrams of ionic composition
-
 
 ```{r include=TRUE, message=FALSE}
 #load data files
@@ -142,17 +140,14 @@ str(data1)
 
 ```{r strip data down to analysis matrix}
 data2 <- data1[, -2]
-data2 <- data2[-c(1:2), ]
 row.names(data2) <-data2[, 1]
 data2 <- data2[, -1]
-colnames(data2) <- data2[1, ]
-data2 <- data2[-1, ]
 species <- row.names(data2) #extract list of species
 samples <- colnames(data2) #extract list of samples
-data2[data2==""]  <- 0  #replace blanks with 0
 data2 = as.matrix(as.data.frame(lapply(data2[, 1:26], as.numeric))) #convert data to numeric
 row.names(data2) <- species
 data2 <- t(data2)
+row.names(data2) <- samples
 ```
 
 ```{r extract list of sample types}
@@ -176,6 +171,8 @@ data2.mds.plot <- ggplot(data2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1
 print(data2.mds.plot)
 ```
 
+The above ordination plot shows differing composition of aquatic invertebrates by sample type, showing that the three sampling methods capture different components of the fauna. Site 14 (Potential Spring 1) is an open saline waterbody and has a very different fauna to the freshwater mound springs. The second core sample from site 11 (Attack Spring) was depauperate and that probbaly explains its separation from the other core samples. Otherwise there is no clear paterning amongst sites suggesting they are all variations on the same faunal theme.  
+
 #Richness by major taxonomic group for all Kimberley Springs
 
 ```{r Read species matrix}
@@ -183,7 +180,7 @@ data.rich <- read.csv("ALL KMS-VBM data.csv", stringsAsFactors = FALSE, check.na
 ```
 
 ```{r create new empty matrix for richness values}
-rich.sums <- data.rich[0, 4:48]
+rich.sums <- data.rich[0, 4:NCOL(data.rich)]
 rich.sums[1:13, 1] <- c("protozoans","other","rotifers","molluscs", "annelids","mites","cladocera","ostracoda","copepoda","amphipoda","shrimps","crabs","insects")
 ```
 
@@ -192,14 +189,14 @@ row=0
 for (i in c("^B","^I","^J","^K","^L","^M","^OG","^OH","^OJ","^OP","^OT","^OX","^Q"))
   {
   data.rich.temp <- data.rich[data.rich$LOWESTIDNC %like% i, ]
-temp <- colSums(data.rich.temp[, 5:48])
+temp <- colSums(data.rich.temp[, 5:NCOL(data.rich)])
 row=row+1
-rich.sums[row, 2:45] <- temp
+rich.sums[row, 2:NCOL(rich.sums)] <- temp
 }
 ```
 
 ```{r calculate macrocrustacea and microcrustacea richness and delete individual crustacean orders. Note this assumes cladocerans, ostracods and copepods in rows 7 to 9 - CHECK IF MODIFYING THIS}
-rich.sums[NROW(rich.sums)+1, 2:NCOL(rich.sums)] <- colSums(rich.sums[grepl("cladocera|ostracoda|copepoda", rich.sums$LOWESTIDNC), 2:45])
+rich.sums[NROW(rich.sums)+1, 2:NCOL(rich.sums)] <- colSums(rich.sums[grepl("cladocera|ostracoda|copepoda", rich.sums$LOWESTIDNC), 2:NCOL(rich.sums)])
 rich.sums[NROW(rich.sums), 1] <- "microcrustacea"
 rich.sums[NROW(rich.sums)+1, 2:NCOL(rich.sums)] <- colSums(rich.sums[grepl("amphipoda|shrimps|crabs", rich.sums$LOWESTIDNC), 2:NCOL(rich.sums)])
 rich.sums[NROW(rich.sums), 1] <- "macrocrustacea"
@@ -212,24 +209,29 @@ rich.sums <- rich.sums[, -1]
 rich.sums.list <- liste(t(rich.sums), x="taxon", y="sample", entry="richness")
 ```
 
+```{r}
+write.csv(rich.sums, "rich.sums.csv")
+```
+
+
 ##Compositional richness of  benthic samples collected from 1999-2001
 ```{r plot stacked column plot, 1990s}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "1996|1999|2000|2001", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "1999|2000|2001", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
-  scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
+  scale_y_continuous(limits=c(0, 150)) + #set y-limit to 100 for consistency
   guides(fill=guide_legend(title=NULL)) + #remove legend title
   theme_bw() + #remove background colour
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + #remove gridlines
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
-##Compositional richness of combined plankton and benthic samples collected in 1993 and 2003
-```{r plot stacked column plot, 1993 Halse et al. 1996 data with the 2003 sample from Kachana}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "1993|2003", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+##Compositional richness of combined plankton and benthic samples collected in 1993, 2003 and 2017
+```{r plot stacked column plot, 1993 V-B samples, 2003 sample from Kachana and 2017 combined plankton and benthic}
+ggplot(rich.sums.list[rich.sums.list$sample %like% "1993|2003|2017-PB", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
-  scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
+  scale_y_continuous(limits=c(0, 150)) + #set y-limit to 150 for consistency
   guides(fill=guide_legend(title=NULL)) + #remove legend title
   theme_bw() + #remove background colour
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + #remove gridlines
@@ -238,10 +240,10 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "1993|2003", ], aes(sample, r
 
 ##Compositional richness of plankton and benthic samples collected in 2017
 ```{r plot stacked column plot, 2017 benthic/plankton data}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P-", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
-  scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
+  scale_y_continuous(limits=c(0, 150)) + #set y-limit to 100 for consistency
   guides(fill=guide_legend(title=NULL)) + #remove legend title
   theme_bw() + #remove background colour
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + #remove gridlines
@@ -253,10 +255,9 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P", ], aes(sampl
 ggplot(rich.sums.list[rich.sums.list$sample %like% "2016|2017-C", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
-  scale_y_continuous(limits=c(0, 100)) + #set y-limit to 100 for consistency
+  scale_y_continuous(limits=c(0, 150)) + #set y-limit to 100 for consistency
   guides(fill=guide_legend(title=NULL)) + #remove legend title
   theme_bw() + #remove background colour
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + #remove gridlines
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
-
