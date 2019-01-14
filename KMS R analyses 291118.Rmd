@@ -201,21 +201,11 @@ rich.sums[row, 2:46] <- temp
 }
 ```
 
-```{r}
-data.rich.temp <- data.rich[data.rich$LOWESTIDNC %like% "^B", ]
-```
-
-
-
-
-
-
-
-```{r calculate macrocrustacea and microcrustacea richness and delete individual crustacean orders}
-rich.sums[13, 2:40] <- colSums(rich.sums[6:8, 2:40])
-rich.sums[13, 1] <- "microcrustacea"
-rich.sums[14, 2:40] <- colSums(rich.sums[9:11, 2:40])
-rich.sums[14,1] <- "macrocrustacea"
+```{r calculate macrocrustacea and microcrustacea richness and delete individual crustacean orders. Note this assumes cladocerans, ostracods and copepods in rows 7 to 9 - CHECK IF MODIFYING THIS}
+rich.sums[NROW(rich.sums)+1, 2:46] <- colSums(rich.sums[grepl("cladocera|ostracoda|copepoda", rich.sums$LOWESTIDNC), 2:46])
+rich.sums[NROW(rich.sums), 1] <- "microcrustacea"
+rich.sums[NROW(rich.sums)+1, 2:46] <- colSums(rich.sums[grepl("amphipoda|shrimps|crabs", rich.sums$LOWESTIDNC), 2:46])
+rich.sums[NROW(rich.sums), 1] <- "macrocrustacea"
 rich.sums <-  rich.sums[!grepl("cladocera|ostracoda|copepoda|amphipoda|shrimps|crabs",rich.sums$LOWESTIDNC),] 
 ```
 
