@@ -203,6 +203,11 @@ rich.sums[NROW(rich.sums), 1] <- "macrocrustacea"
 rich.sums <-  rich.sums[!grepl("cladocera|ostracoda|copepoda|amphipoda|shrimps|crabs",rich.sums$LOWESTIDNC),] 
 ```
 
+```{r}
+write.csv(rich.sums, "rich.sums.csv")
+```
+
+
 ```{r add taxon names as row names and then convert to list format}
 row.names(rich.sums) <- rich.sums[, 1]
 rich.sums <- rich.sums[, -1]
@@ -235,7 +240,7 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "PB", ], aes(sample, richness
 
 ##Compositional richness of plankton and benthic samples collected in 2017
 ```{r plot stacked column plot, 2017 benthic/plankton data}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B-|2017-P-", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B-|2017-P-|2017-P1|2017-P2", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 150)) + #set y-limit to 100 for consistency
