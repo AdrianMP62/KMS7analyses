@@ -209,11 +209,6 @@ rich.sums <- rich.sums[, -1]
 rich.sums.list <- liste(t(rich.sums), x="taxon", y="sample", entry="richness")
 ```
 
-```{r}
-write.csv(rich.sums, "rich.sums.csv")
-```
-
-
 ##Compositional richness of  benthic samples collected from 1999-2001
 ```{r plot stacked column plot, 1990s}
 ggplot(rich.sums.list[rich.sums.list$sample %like% "1999|2000|2001", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
@@ -228,7 +223,7 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "1999|2000|2001", ], aes(samp
 
 ##Compositional richness of combined plankton and benthic samples collected in 1993, 2003 and 2017
 ```{r plot stacked column plot, 1993 V-B samples, 2003 sample from Kachana and 2017 combined plankton and benthic}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "1993|2003|2017-PB", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "PB", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 150)) + #set y-limit to 150 for consistency
@@ -240,7 +235,7 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "1993|2003|2017-PB", ], aes(s
 
 ##Compositional richness of plankton and benthic samples collected in 2017
 ```{r plot stacked column plot, 2017 benthic/plankton data}
-ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B|2017-P-", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
+ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B-|2017-P-", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
   geom_bar(stat = "identity", colour="black") + #colour=black sets borders for the bars
   scale_y_continuous(limits=c(0, 150)) + #set y-limit to 100 for consistency
