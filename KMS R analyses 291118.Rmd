@@ -15,9 +15,18 @@ Date and time: `r Sys.time()`
 
 Uses the following datafiles:  
   
-ionic composition mgl.csv (2016-17 ionic composition data) with columns: Year,CO3,Ca,Cl,HCO3,K,Mg,Na,SO4 (values as mg/L) and site codes (KMS01, KMS02 etc.) as row.headings  
-KMS17_invert_data.csv (2017 KMS invertebrate presence/absence data)  
-ALL KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017 with columns: "Class","Family","LOWESTID","LOWESTIDNC", then sample headings as year-two digit KMS code-sample type : P = Plankton, B = Benthic, PB = Plankton+Benthic, C = Core. Blanks already replaced with zeros  
+* ionic composition mgl.csv (2016-17 ionic composition data) with columns:   Year,CO3,Ca,Cl,HCO3,K,Mg,Na,SO4 (values as mg/L) and site codes (KMS01, KMS02 etc.) as row.headings  
+* KMS17_invert_data.csv (2017 KMS invertebrate presence/absence data, with LOWESTID and LOWESTIDNC columns at front, then site codes)  
+* ALL KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017 with columns: "Class","Family","LOWESTID","LOWESTIDNC", then sample headings as year-two digit KMS code-sample type : P = Plankton, B = Benthic, PB = Plankton+Benthic, C = Core. Blanks already replaced with zeros  
+* 
+
+And undertakes the following analyses:  
+  
+* ordination of 2017 data  
+* ionic composition ternary plots  
+* cumulative richness by taxonomic group across all KMS data 1999 to 2017
+* species accumulation for all KMS data 1999-2017
+
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
@@ -261,3 +270,20 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "2016|2017-C", ], aes(sample,
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + #remove gridlines
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
+
+##Species pool estimators
+
+```{r load datafile which has species names in first column, and sites in columns}
+invertspec <- read.csv("spec_accum.csv")
+row.names(invertspec) <- invertspec[, 1]
+invertspec <- invertspec[, -1]
+invertspec <- t(invertspec)
+```
+
+```{r}
+invert.spec.acc <- specpool(invertspec)
+invert.spec.acc
+```
+
+
+
