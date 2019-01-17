@@ -47,6 +47,7 @@ library(simba)
 library(Ternary)
 library(ggplot2)
 library(RColorBrewer)
+library(iNEXT)
 ```
 
 #Ternary diagrams of ionic composition
@@ -139,6 +140,8 @@ AddToTernary(points, Anions[Anions$year %like% "2017", 1:3], pch=21, cex=Meq.per
 ```
 
 
+________________________________________________________________________________________  
+
 #Multivariate analyses of 2017 data only
 
 <!-- use stringsAsfactors so the 1's are numbers -->
@@ -161,6 +164,10 @@ row.names(data2) <- samples
 
 ```{r extract list of sample types}
 sample.type <- substring(samples, 3,3)
+sample.type <- gsub("P", "Plankton", sample.type)
+sample.type <- gsub("B", "Benthic", sample.type)
+sample.type <- gsub("C", "Core", sample.type)
+
 ```
 
 ```{r nMDS ordination in vegan, results=FALSE}
@@ -281,6 +288,19 @@ invertspec <- t(invertspec)
 ```
 
 ```{r}
-invert.spec.acc <- poolaccum(invertspec, permutations=100)
+invert.spec.acc <- poolaccum(invertspec)
+plot(invert.spec.acc)
 invert.spec.acc
 ```
+
+
+```{r}
+invertspec <- t(invertspec)
+invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=200, datatype="incidence_raw") #q=0 specifies species richness
+plot(invert.spec.acc2)
+ggiNEXT (invert.spec.acc2, type=1, facet.var="site")
+```
+
+
+
+
