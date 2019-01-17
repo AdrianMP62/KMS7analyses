@@ -283,30 +283,4 @@ invertspec <- t(invertspec)
 ```{r}
 invert.spec.acc <- poolaccum(invertspec, permutations=100)
 invert.spec.acc
-invert.spec.acc2 <- poolaccum(invertspec)
-summary(invert.spec.acc2, display = "chao")
-plot(invert.spec.acc2)
 ```
-
-```{r}
-data(dune)
-data(dune.env)
-attach(dune.env)
-pool <- specpool(dune, Management)
-pool
-op <- par(mfrow=c(1,2))
-boxplot(specnumber(dune) ~ Management, col="hotpink", border="cyan3",
- notch=TRUE)
-boxplot(specnumber(dune)/specpool2vect(pool) ~ Management, col="hotpink",
- border="cyan3", notch=TRUE)
-par(op)
-data(BCI)
-## Accumulation model
-pool <- poolaccum(BCI)
-summary(pool, display = "chao")
-plot(pool)
-## Quantitative model
-estimateR(BCI[1:5,])
-```
-
-
