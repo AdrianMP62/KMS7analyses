@@ -48,6 +48,7 @@ library(Ternary)
 library(ggplot2)
 library(RColorBrewer)
 library(iNEXT)
+library(eulerr)
 ```
 
 #Ternary diagrams of ionic composition
@@ -278,29 +279,24 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "2016|2017-C", ], aes(sample,
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
-##Species pool estimators
-
-```{r load datafile which has species names in first column, and sites in columns}
-invertspec <- read.csv("spec_accum.csv")
-row.names(invertspec) <- invertspec[, 1]
-invertspec <- invertspec[, -1]
-invertspec <- t(invertspec)
-```
-
-```{r}
-invert.spec.acc <- poolaccum(invertspec)
-plot(invert.spec.acc)
-invert.spec.acc
-```
-
+##Species pool estimation
 
 ```{r}
 invertspec <- t(invertspec)
-invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=200, datatype="incidence_raw") #q=0 specifies species richness
+invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=200, datatype="incidence_raw") #q=0 specifies species richness, endpoint = number of samples at which to stop extrapolation
 plot(invert.spec.acc2)
 ggiNEXT (invert.spec.acc2, type=1, facet.var="site")
 ```
 
+##Euler diagram showing species overlp between sample types
 
+```{r draw euler plot with segment values defined by 'con'}
+con <- c(A = 201, B = 164, C = 77, "A&B" = 95, "A&C"=52, "B&C" = 44, "A&B&C"=38)
+plot(euler(con), alpha = 0.5, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core")))
+```
 
-
+```{r euler plot validation}
+euler.calc <- euler(con) #separate calculation of values for statitistical assessment of plot validity
+error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
+  pal = NULL) #plot errors
+```
