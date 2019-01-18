@@ -25,7 +25,8 @@ And undertakes the following analyses:
 * ordination of 2017 data  
 * ionic composition ternary plots  
 * cumulative richness by taxonomic group across all KMS data 1999 to 2017
-* species accumulation for all KMS data 1999-2017
+* species accumulation for all KMS data 1999-201  
+* Euler diagram for distribution of species across 3 sample types (plankton, benthic and core)
 
 
 ```{r setup}
@@ -291,8 +292,9 @@ ggiNEXT (invert.spec.acc2, type=1, facet.var="site")
 ##Euler diagram showing species overlp between sample types
 
 ```{r draw euler plot with segment values defined by 'con'}
+#based on 5 samples of each types collected at the same five springs
 con <- c(A = 201, B = 164, C = 77, "A&B" = 95, "A&C"=52, "B&C" = 44, "A&B&C"=38)
-plot(euler(con), alpha = 0.5, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core")))
+plot(euler(con), alpha = 0.6, edges=1, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core")))
 ```
 
 ```{r euler plot validation}
@@ -300,3 +302,17 @@ euler.calc <- euler(con) #separate calculation of values for statitistical asses
 error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
   pal = NULL) #plot errors
 ```
+
+```{r}
+spec.accum <- data.frame("Richness" = c(90, 165, 177, 179,	237,	303,	538))
+spec.accum$Year <- as.Date(c('1993-10-17', '1999-9-10', '2000-10-01', '2001-07-01', '2003-09-06', '2016-05-27', '2017-08-04'))
+```
+
+```{r}
+plot(spec.accum$Year, spec.accum$Richness, type="b", lwd=2, pch=10, xlab = "Year", ylab = "Cumulative Richness")
+```
+
+
+
+
+
