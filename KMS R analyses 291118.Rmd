@@ -2,7 +2,7 @@
 title: "Kimberley Mound Springs invertebrate analyses"
 author: "Adrian Pinder"
 date and time: '`r Sys.time()`'
-output: pdf_document
+output: html_document
 software: 'RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`'
 editor_options: 
   chunk_output_type: console
@@ -52,7 +52,10 @@ library(iNEXT)
 library(eulerr)
 ```
 
-#Ternary diagrams of ionic composition
+
+________________________________________________________________________________________  
+
+##Ternary diagrams of ionic composition
 
 ```{r include=TRUE, message=FALSE}
 #load data files
@@ -143,8 +146,7 @@ AddToTernary(points, Anions[Anions$year %like% "2017", 1:3], pch=21, cex=Meq.per
 
 
 ________________________________________________________________________________________  
-
-#Multivariate analyses of 2017 data only
+##Multivariate analyses of 2017 data only
 
 <!-- use stringsAsfactors so the 1's are numbers -->
 ```{r upload data, results=FALSE}
@@ -191,7 +193,59 @@ print(data2.mds.plot)
 
 The above ordination plot shows differing composition of aquatic invertebrates by sample type, showing that the three sampling methods capture different components of the fauna. Site 14 (Potential Spring 1) is an open saline waterbody and has a very different fauna to the freshwater mound springs. The second core sample from site 11 (Attack Spring) was depauperate and that probbaly explains its separation from the other core samples. Otherwise there is no clear paterning amongst sites suggesting they are all variations on the same faunal theme.  
 
-#Calculate richness by major taxonomic group for all Kimberley Springs
+________________________________________________________________________________________  
+
+##Multivariate analysis of combined 2017 data (5 sites with plankton, benthic and core combined)
+
+```{r upload data, results=FALSE}
+data1 <- read.csv("KMS17_invert_data.csv", stringsAsFactors = FALSE, check.names = FALSE)
+str(data1)
+```
+
+```{r strip data down to analysis matrix}
+data2 <- data1[, -2]
+row.names(data2) <-data2[, 1]
+data2 <- data2[, -1]
+species <- row.names(data2) #extract list of species
+samples <- colnames(data2) #extract list of samples
+data2 = as.matrix(as.data.frame(lapply(data2[, 1:26], as.numeric))) #convert data to numeric
+row.names(data2) <- species
+data2 <- t(data2)
+row.names(data2) <- samples
+```
+
+```{r}
+data3 <- data2[NULL, ]
+data3[1, ] <- rowsum(data2, data2[grepl("01P|01C|01B", row.names(data2)), ])
+```
+
+```{r}
+data3 <- data2[, ]
+group <- data2[1:3, ]
+data3[1, ] <- colSums(group)
+
+```
+
+```{r}
+data2[27, ] <-colSums(data2))
+x <- as.data.frame(colSums(data2))
+x <- t(x)
+data3[1, ] <- x
+data3[1, ] <- x[2, ]
+x <- sapply (data2)
+```
+
+
+
+```{r}
+z <-mtcars
+```
+
+
+
+________________________________________________________________________________________  
+
+##Calculate richness by major taxonomic group for all Kimberley Springs
 
 ```{r Read species matrix}
 data.rich <- read.csv("ALL KMS-VBM data.csv", stringsAsFactors = FALSE, check.names = FALSE)
@@ -279,6 +333,9 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "2016|2017-C", ], aes(sample,
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
+
+________________________________________________________________________________________  
+
 ##Species pool estimation
 
 ```{r load datafile which has species names in first column, and sites in columns}
@@ -293,6 +350,9 @@ invertspec <- t(invertspec)
 invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=200, datatype="incidence_raw") #q=0 specifies species richness, endpoint = number of samples at which to stop extrapolation
 plot(invert.spec.acc2)
 ```
+
+
+________________________________________________________________________________________  
 
 ##Euler diagram showing species overlap between sample types
 
@@ -309,6 +369,8 @@ error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
   pal = NULL) #plot errors
 ```
 
+
+________________________________________________________________________________________  
 
 ##Species accumlation over time
 ```{r create dataframe}
