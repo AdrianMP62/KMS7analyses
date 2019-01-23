@@ -356,7 +356,7 @@ ________________________________________________________________________________
 
 ##Euler diagram showing species overlap between sample types
 
-```{r draw euler plot with segment values defined by con}
+```{r draw euler plot with segment values defined by con. A,B,C are numbers of species that only occurred in benthic, plankton or core samples}
 #based on 5 samples of each types collected at the same five springs
 con <- c(A = 92, B = 63, C = 19, "A&B" = 57, "A&C"=14, "B&C" = 6, "A&B&C"=38)
 plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core"), cex=2))
