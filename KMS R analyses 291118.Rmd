@@ -191,7 +191,25 @@ data2.mds.plot <- ggplot(data2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1
 print(data2.mds.plot)
 ```
 
-The above ordination plot shows differing composition of aquatic invertebrates by sample type, showing that the three sampling methods capture different components of the fauna. Site 14 (Potential Spring 1) is an open saline waterbody and has a very different fauna to the freshwater mound springs. The second core sample from site 11 (Attack Spring) was depauperate and that probbaly explains its separation from the other core samples. Otherwise there is no clear paterning amongst sites suggesting they are all variations on the same faunal theme.  
+The above ordination plot shows differing composition of aquatic invertebrates by sample type, showing that the three sampling methods capture different components of the fauna. Site 14 (Potential Spring 1) is an open saline waterbody and has a very different fauna to the freshwater mound springs. The second core sample from site 11 (Attack Spring) was depauperate and that probbaly explains its separation from the other core samples. Otherwise there is no clear paterning amongst sites suggesting they are all variations on the same faunal theme. The ordination below was run without singleton species but the resulting plot is almost identical and with the same stress of about 0.17.
+
+```{r, create new dataset by removing singleton species}
+data2.no1s <- data2[, !(colSums(data2) == 1)]
+```
+
+```{r nMDS ordination in vegan, results=FALSE}
+data2.no1s.mds <- metaMDS(data2.no1s, distance="bray")
+data2.no1s.pts <- as.data.frame(data2.no1s.mds$points)
+```
+
+```{r plot new ordination}
+data2.no1s.mds.plot <- ggplot(data2.no1s.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour= sample.type)) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
+```
+
+```{r}
+print(data2.no1s.mds.plot)
+```
+
 
 ________________________________________________________________________________________  
 
