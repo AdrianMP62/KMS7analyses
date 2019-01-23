@@ -358,13 +358,13 @@ ________________________________________________________________________________
 
 ```{r draw euler plot with segment values defined by con}
 #based on 5 samples of each types collected at the same five springs
-con <- c(A = 201, B = 164, C = 77, "A&B" = 95, "A&C"=52, "B&C" = 44, "A&B&C"=38)
-plot(euler(con), alpha = 0.6, edges=1, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core")))
+con <- c(A = 92, B = 63, C = 19, "A&B" = 57, "A&C"=14, "B&C" = 6, "A&B&C"=38)
+plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core"), cex=2))
 ```
 
 ###assess euler plot errors
 ```{r euler plot validation}
-euler.calc <- euler(con) #separate calculation of values for statitistical assessment of plot validity
+euler.calc <- euler(con, shape = "ellipse") #separate calculation of values for statitistical assessment of plot validity
 error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
   pal = NULL) #plot errors
 ```
