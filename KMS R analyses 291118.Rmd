@@ -211,9 +211,15 @@ print(data2.no1s.mds.plot)
 ```
 
 
+```{r 3D nMDS ordination in vegan, results=FALSE}
+data2.no1s.mds <- metaMDS(data2.no1s, k=3, distance="bray")
+data2.no1s.pts <- as.data.frame(data2.no1s.mds$points)
+plot(data2.no1s.mds, display = "sites")
+```
+
 ________________________________________________________________________________________  
 
-##Multivariate analysis of combined 2017 data (5 sites with plankton, benthic and core combined)
+##Multivariate analysis of 2017 data combined across ample types (5 sites with plankton, benthic and core combined)
 
 ```{r upload data, results=FALSE}
 data1 <- read.csv("KMS17_invert_data.csv", stringsAsFactors = FALSE, check.names = FALSE)
