@@ -180,10 +180,6 @@ data2.pts <- as.data.frame(data2.mds$points)
 ```
 
 ```{r}
-data2.mds
-```
-
-```{r}
 data2.mds.plot <- ggplot(data2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour= sample.type)) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
 print(data2.mds.plot)
 ```
@@ -205,6 +201,8 @@ data2.no1s.pts <- as.data.frame(data2.no1s.mds$points)
 data2.no1s.mds.plot <- ggplot(data2.no1s.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour= sample.type)) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
 print(data2.no1s.mds.plot)
 ```
+
+The ordination plot below shows two axes from a 3D ordination of the 2017 data, with very similar patterns as the 2D plot but with lower stress (0.12)
 
 ```{r 3D nMDS ordination in vegan, results=FALSE, no singletons}
 data2.no1s.3Dmds <- metaMDS(data2.no1s, k=3, distance="bray")
@@ -352,7 +350,7 @@ spec.accum$Year <- as.Date(c('1993-10-17', '1999-9-10', '2000-10-01', '2001-07-0
 ```
 
 ```{r}
-plot(spec.accum$Year, spec.accum$Richness, type="b", lwd=2, pch=10, xlab = "Year", ylab = "Cumulative Richness")
+plot(spec.accum$Year, spec.accum$Richness, type="b", ylim=c(0,600), lwd=2, pch=10, xlab = "Year", ylab = "Cumulative Richness")
 ```
 
 
