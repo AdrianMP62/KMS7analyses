@@ -54,6 +54,7 @@ library(rgl)
 library(car)
 ```
 
+
 ________________________________________________________________________________________  
 
 ##Ternary diagrams of ionic composition
@@ -214,6 +215,7 @@ data2.No1s.3Dmds.plot <- ggplot(data2.no1s.3Dpts, aes(x=MDS1, y=MDS3)) + coord_f
 print(data2.No1s.3Dmds.plot)
 ```
 
+
 ________________________________________________________________________________________  
 
 ##Calculate richness by major taxonomic group for all Kimberley Springs
@@ -352,8 +354,3 @@ spec.accum$Year <- as.Date(c('1993-10-17', '1999-9-10', '2000-10-01', '2001-07-0
 ```{r}
 plot(spec.accum$Year, spec.accum$Richness, type="b", ylim=c(0,600), lwd=2, pch=10, xlab = "Year", ylab = "Cumulative Richness")
 ```
-
-
-
-
-
