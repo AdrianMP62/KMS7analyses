@@ -26,7 +26,7 @@ And undertakes the following analyses:
 * ionic composition ternary plots  
 * cumulative richness by taxonomic group across all KMS data 1999 to 2017
 * species accumulation for all KMS data 1999-201  
-* Euler diagram for distribution of species across 3 sample types (plankton, benthic and core)
+* Euler diagram for distribution of species across 3 sample types (plankton, benthic and core)  
 
 
 ```{r setup}
@@ -40,18 +40,9 @@ options(scipen=999)
 
 ```
 
-```{r, message=FALSE, results='hide'}
-library(vegan)
-library(ggplot2)
-library(data.table)
-library(simba)
-library(Ternary)
-library(ggplot2)
-library(RColorBrewer)
-library(iNEXT)
-library(eulerr)
-library(rgl)
-library(car)
+```{r results="hide", warning=FALSE, message=FALSE}
+Packages <- c("vegan", "ggplot2", "data.table", "simba", "Ternary", "RColorBrewer", "iNEXT", "eulerr", "rgl", "car")
+lapply(Packages, library, character.only = TRUE)
 ```
 
 
@@ -193,7 +184,7 @@ The ordination below was run without singleton species but the resulting plot is
 data2.no1s <- data2[, !(colSums(data2) == 1)] #requires creation of 'data2' from code above
 ```
 
-```{r nMDS ordination in vegan, results=FALSE}
+```{r nMDS ordination in vegan no singletons, results=FALSE}
 data2.no1s.mds <- metaMDS(data2.no1s, distance="bray")
 data2.no1s.pts <- as.data.frame(data2.no1s.mds$points)
 ```
@@ -205,7 +196,7 @@ print(data2.no1s.mds.plot)
 
 The ordination plot below shows two axes from a 3D ordination of the 2017 data, with very similar patterns as the 2D plot but with lower stress (0.12)
 
-```{r 3D nMDS ordination in vegan, results=FALSE, no singletons}
+```{r 3D nMDS ordination in vegan without singletons, results=FALSE}
 data2.no1s.3Dmds <- metaMDS(data2.no1s, k=3, distance="bray")
 data2.no1s.3Dpts <- as.data.frame(data2.no1s.3Dmds$points)
 ```
@@ -328,8 +319,7 @@ plot(invert.spec.acc2)
 ________________________________________________________________________________________  
 
 ##Euler diagram showing species overlap between sample types
-
-```{r draw euler plot with segment values defined by con. A,B,C are numbers of species that only occurred in benthic, plankton or core samples}
+```{r}
 #based on 5 samples of each types collected at the same five springs
 con <- c(A = 92, B = 63, C = 19, "A&B" = 57, "A&C"=14, "B&C" = 6, "A&B&C"=38)
 plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("benthic", "plankton", "core"), cex=2))
