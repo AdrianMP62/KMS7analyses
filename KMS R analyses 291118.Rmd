@@ -41,6 +41,7 @@ options(scipen=999)
 ```
 
 ```{r results="hide", warning=FALSE, message=FALSE}
+
 Packages <- c("vegan", "ggplot2", "data.table", "simba", "Ternary", "RColorBrewer", "iNEXT", "eulerr", "rgl", "car")
 lapply(Packages, library, character.only = TRUE)
 ```
@@ -304,6 +305,7 @@ ________________________________________________________________________________
 
 ```{r load datafile which has species names in first column, and sites in columns}
 invertspec <- read.csv("spec_accum.csv")
+invertspec <- invertspec[!grepl(c("^J|^B"),invertspec$LOWESTIDNC), ] 
 row.names(invertspec) <- invertspec[, 1]
 invertspec <- invertspec[, -1]
 invertspec <- t(invertspec)
@@ -311,10 +313,13 @@ invertspec <- t(invertspec)
 
 ```{r}
 invertspec <- t(invertspec)
-invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=200, datatype="incidence_raw") #q=0 specifies species richness, endpoint = number of samples at which to stop extrapolation
+invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=150, datatype="incidence_raw") #q=0 specifies species richness, endpoint = number of samples at which to stop extrapolation
 plot(invert.spec.acc2)
 ```
 
+```{r}
+invert.spec.acc2
+```
 
 ________________________________________________________________________________________  
 
