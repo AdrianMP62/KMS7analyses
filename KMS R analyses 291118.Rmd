@@ -306,9 +306,9 @@ ________________________________________________________________________________
 ##Species pool estimation
 
 ```{r load datafile which has species names in first column, and sites in columns}
-invertspec <- read.csv("spec_accum.csv")
+invertspec <- read.csv("spec_accum.csv", check.names = FALSE)
 invertspec <- invertspec[!grepl(c("^J|^B"),invertspec$LOWESTIDNC), ] 
-row.names(invertspec) <- invertspec[, 1]
+row.names(invertspec) <- invertspec$LOWESTIDNC
 invertspec <- invertspec[, -1]
 invertspec <- t(invertspec)
 ```
