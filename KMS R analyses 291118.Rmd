@@ -26,7 +26,9 @@ And undertakes the following analyses:
 * ionic composition ternary plots  
 * cumulative richness by taxonomic group across all KMS data 1999 to 2017
 * species accumulation for all KMS data 1999-201  
-* Euler diagram for distribution of species across 3 sample types (plankton, benthic and core)  
+* Euler diagram for distribution of species across 3 sample types (plankton, benthic and core) 
+* Actual species accumulation over time  
+* Proportions of species known only from one area
 
 
 ```{r setup}
@@ -337,15 +339,42 @@ error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
   pal = NULL) #plot errors
 ```
 
-
 ________________________________________________________________________________________  
 
 ##Species accumlation over time
 ```{r create dataframe}
-spec.accum <- data.frame("Richness" = c(90, 165, 177, 179,	237,	303,	538))
+spec.accum <- data.frame("Richness" = c(89, 162, 174, 176,	232,	279,	495))
 spec.accum$Year <- as.Date(c('1993-10-17', '1999-9-10', '2000-10-01', '2001-07-01', '2003-09-06', '2016-05-27', '2017-08-04'))
+spec.accum$Samples <- c(3,9,10,11,12,18,44)
+```
+
+```{r}
+plot(spec.accum$Samples, spec.accum$Richness, type="b", ylim=c(0,600), lwd=2, pch=10, xlab = "Number of Samples", ylab = "Cumulative Richness")
 ```
 
 ```{r}
 plot(spec.accum$Year, spec.accum$Richness, type="b", ylim=c(0,600), lwd=2, pch=10, xlab = "Year", ylab = "Cumulative Richness")
 ```
+
+________________________________________________________________________________________ 
+
+##Proportion of species known from just one of the five areas
+```{r}
+Spec.area <- data.frame("Species" = c(84,5,106,14,73,46,37,36,140,149))
+Spec.area$Distribution <- rep(c(">1 area" , "= 1 area") , 5)
+Spec.area$Area <- c(rep("Area 1 (Dampier)", 2), rep("Area 2 (King Sound coast)", 2), rep("Area 3 (Central)", 2), rep("Area 4 (Kachana)", 2), rep("Area 5 (Victoria-Bonaparte)", 2))
+```
+
+
+```{r}
+ggplot(Spec.area, aes(fill=Distribution, y=Species, x=Area), cex=2) +
+    geom_bar( stat="identity", colour="black") + scale_fill_manual(values=c("#79CDCD", "#EEDC82")) + theme(axis.text.x = element_text(size=14, angle = 90, hjust = 1)) + theme(axis.text.y = element_text(size=14)) + theme(axis.title.y=element_text(size=15, margin = margin(t = 0, r = 20, b = 0, l = 0))) + theme(axis.title.x = element_blank()) + theme(legend.text = element_text(size=14)) +theme(legend.title = element_text(size=18))
+```
+
+
+
+
+
+
+
+
