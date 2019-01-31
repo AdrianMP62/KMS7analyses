@@ -372,6 +372,42 @@ ggplot(Spec.area, aes(fill=Distribution, y=Species, x=Area)) +
 ```
 
 
+__________________________________________________________________________________________
+##Ordination of combined Walyarta and KMS invertebrate data
+
+
+<!-- use stringsAsfactors so the 1's are numbers -->
+```{r upload data, results=FALSE}
+kmsman <- read.csv("KMS-MAN.csv", stringsAsFactors = FALSE, check.names = FALSE)
+```
+
+```{r strip data down to analysis matrix}
+kmsman2 <- kmsman[, -2]
+row.names(kmsman2) <-kmsman2[, 1]
+kmsman2 <- kmsman2[, -1]
+species <- row.names(kmsman2) #extract list of species
+samples <- colnames(kmsman2) #extract list of samples
+kmsman2 = as.matrix(as.data.frame(lapply(kmsman2[, 1:26], as.numeric))) #convert data to numeric
+row.names(kmsman2) <- species
+kmsman2 <- t(kmsman2)
+row.names(kmsman2) <- samples
+```
+
+```{r extract list of sample types}
+region <- as.list("Kimberley","Kimberley","Kimberley","Kimberley","Kimberley","Kimberley","Mandora")
+
+```
+
+```{r nMDS ordination in vegan, results=FALSE}
+kmsman2.mds <- metaMDS(kmsman2, distance="bray")
+kmsman2.pts <- as.data.frame(kmsman2.mds$points)
+```
+
+```{r}
+data2.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2)) + geom_text(aes(label = samples), cex=3, vjust=2, hjust=1)
+print(data2.mds.plot)
+```
+
 
 
 
