@@ -407,10 +407,3 @@ kmsman2.pts <- as.data.frame(kmsman2.mds$points)
 kmsman.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour=samples)) + scale_size(guide = 'none') + guides(colour = guide_legend(override.aes = list(size=5)))
 print(kmsman.mds.plot)
 ```
-
-
-
-
-
-
-
