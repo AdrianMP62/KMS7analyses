@@ -10,7 +10,7 @@ editor_options:
 
 Git repository https://github.com/AdrianMP62/KMS7analyses  
 
-RStudio: Version 1.1.456 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`  
+RStudio: Version 1.1.463 – © 2009-2018 RStudio, Inc. R version: `r getRversion()`  
 Date and time: `r Sys.time()`
 
 Uses the following datafiles:  
@@ -18,7 +18,7 @@ Uses the following datafiles:
 * ionic composition mgl.csv (2016-17 ionic composition data) with columns:   Year,CO3,Ca,Cl,HCO3,K,Mg,Na,SO4 (values as mg/L) and site codes (KMS01, KMS02 etc.) as row.headings  
 * KMS17_invert_data.csv (2017 KMS invertebrate presence/absence data, with LOWESTID and LOWESTIDNC columns at front, then site codes)  
 * ALL KMS-VBM data.csv (all KMS invertebrate presence/absence data - 1999-2017 with columns: "Class","Family","LOWESTID","LOWESTIDNC", then sample headings as year-two digit KMS code-sample type : P = Plankton, B = Benthic, PB = Plankton+Benthic, C = Core. Blanks already replaced with zeros  
-* 
+* KMS-MAN.csv (all Mandora surface water samples from 1999 and 2017 and the combined plankton and benthic samples for six sites sampled in 2017)  
 
 And undertakes the following analyses:  
   
@@ -28,7 +28,8 @@ And undertakes the following analyses:
 * species accumulation for all KMS data 1999-201  
 * Euler diagram for distribution of species across 3 sample types (plankton, benthic and core) 
 * Actual species accumulation over time  
-* Proportions of species known only from one area
+* Proportions of species known only from one area  
+* Ordination of Mandora plus Kimberley mound spring invertebrates  
 
 
 ```{r setup}
@@ -43,8 +44,7 @@ options(scipen=999)
 ```
 
 ```{r results="hide", warning=FALSE, message=FALSE}
-
-Packages <- c("vegan", "ggplot2", "data.table", "simba", "Ternary", "RColorBrewer", "iNEXT", "eulerr", "rgl", "car")
+Packages <- c("vegan", "ggplot2", "stringr", "data.table", "simba", "Ternary", "RColorBrewer", "iNEXT", "eulerr", "car")
 lapply(Packages, library, character.only = TRUE)
 ```
 
@@ -166,7 +166,6 @@ sample.type <- substring(samples, 3,3)
 sample.type <- gsub("P", "Plankton", sample.type)
 sample.type <- gsub("B", "Benthic", sample.type)
 sample.type <- gsub("C", "Core", sample.type)
-
 ```
 
 ```{r nMDS ordination in vegan, results=FALSE}
@@ -375,7 +374,6 @@ ggplot(Spec.area, aes(fill=Distribution, y=Species, x=Area)) +
 __________________________________________________________________________________________
 ##Ordination of combined Walyarta and KMS invertebrate data
 
-
 <!-- use stringsAsfactors so the 1's are numbers -->
 ```{r upload data, results=FALSE}
 kmsman <- read.csv("KMS-MAN.csv", stringsAsFactors = FALSE, check.names = FALSE)
@@ -393,19 +391,21 @@ kmsman2 <- t(kmsman2)
 row.names(kmsman2) <- samples
 ```
 
-```{r extract list of sample types}
-region <- as.list("Kimberley","Kimberley","Kimberley","Kimberley","Kimberley","Kimberley","Mandora")
-
+```{r create ordination plot labels}
+samples <- str_sub(samples, -2, -1)
+samples <- gsub("-17", "Kimberley 2017", groups)
+samples <- gsub("-99", "Mandora 1999", groups)
+samples <- gsub("-15", "Mandora 2015", groups)
 ```
 
 ```{r nMDS ordination in vegan, results=FALSE}
-kmsman2.mds <- metaMDS(kmsman2, distance="bray")
+kmsman2.mds <- metaMDS(kmsman2, distance="bray", k=3)
 kmsman2.pts <- as.data.frame(kmsman2.mds$points)
 ```
 
 ```{r}
-data2.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2)) + geom_text(aes(label = samples), cex=3, vjust=2, hjust=1)
-print(data2.mds.plot)
+kmsman.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour=samples)) + scale_size(guide = 'none') + guides(colour = guide_legend(override.aes = list(size=5)))
+print(kmsman.mds.plot)
 ```
 
 
