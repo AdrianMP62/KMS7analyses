@@ -44,7 +44,7 @@ options(scipen=999)
 ```
 
 ```{r results="hide", warning=FALSE, message=FALSE}
-Packages <- c("vegan", "ggplot2", "stringr", "data.table", "simba", "Ternary", "RColorBrewer", "iNEXT", "eulerr", "car")
+Packages <- c("vegan", "ggplot2", "stringr", "data.table", "simba", "Ternary", "RColorBrewer", "iNEXT", "eulerr", "rgl", "car", "scatterplot3d")
 lapply(Packages, library, character.only = TRUE)
 ```
 
@@ -316,10 +316,6 @@ invertspec <- t(invertspec)
 invertspec <- t(invertspec)
 invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=150, datatype="incidence_raw") #q=0 specifies species richness, endpoint = number of samples at which to stop extrapolation
 plot(invert.spec.acc2)
-```
-
-```{r}
-invert.spec.acc2
 ```
 
 ________________________________________________________________________________________  
