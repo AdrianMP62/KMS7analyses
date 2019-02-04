@@ -380,30 +380,48 @@ kmsman <- read.csv("KMS-MAN.csv", stringsAsFactors = FALSE, check.names = FALSE)
 ```
 
 ```{r strip data down to analysis matrix}
-kmsman2 <- kmsman[, -2]
+kmsman2 <- kmsman[, -2] #remove species codes
 row.names(kmsman2) <-kmsman2[, 1]
 kmsman2 <- kmsman2[, -1]
 species <- row.names(kmsman2) #extract list of species
 samples <- colnames(kmsman2) #extract list of samples
-kmsman2 = as.matrix(as.data.frame(lapply(kmsman2[, 1:26], as.numeric))) #convert data to numeric
+kmsman2 = as.matrix(as.data.frame(lapply(kmsman2[, 1:25], as.numeric))) #convert data to numeric
 row.names(kmsman2) <- species
 kmsman2 <- t(kmsman2)
 row.names(kmsman2) <- samples
 ```
 
 ```{r create ordination plot labels}
-samples <- str_sub(samples, -2, -1)
-samples <- gsub("-17", "Kimberley 2017", groups)
-samples <- gsub("-99", "Mandora 1999", groups)
-samples <- gsub("-15", "Mandora 2015", groups)
+samples <- str_sub(samples, -3, -1)
+samples <- gsub("-17", "Kimberley 2017", samples)
+samples <- gsub("-99", "Mandora 1999", samples)
+samples <- gsub("-15", "Mandora 2015", samples)
+samples
 ```
 
 ```{r nMDS ordination in vegan, results=FALSE}
-kmsman2.mds <- metaMDS(kmsman2, distance="bray", k=3)
+kmsman2.mds <- metaMDS(kmsman2, distance="jaccard", k=3)
 kmsman2.pts <- as.data.frame(kmsman2.mds$points)
 ```
 
 ```{r}
-kmsman.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour=samples)) + scale_size(guide = 'none') + guides(colour = guide_legend(override.aes = list(size=5)))
+kmsman.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour=samples)) + scale_size(guide = 'none') + guides(colour = guide_legend(override.aes = list(size=5))) #+ geom_text(aes(label = row.names(kmsman2.pts)), vjust=0.5, hjust=1)
 print(kmsman.mds.plot)
 ```
+
+##Euler diagram showing species overlap between Mandora and Kimberley Springs
+```{r}
+#based on 5 samples of each types collected at the same five springs
+con <- c(A = 147, B = 55, C = 21, "A&B" = 26, "A&C"=11, "B&C" = 18, "A&B&C"=26) #A=KMS, B=Man-99, C=Man-15
+plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("Kimberley", "Mandora-2015", "Mandora-1999"), cex=1.5))
+```
+
+###assess euler plot errors
+```{r euler plot validation}
+euler.calc <- euler(con, shape = "ellipse") #separate calculation of values for statitistical assessment of plot validity
+error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
+  pal = NULL) #plot errors
+```
+
+
+
