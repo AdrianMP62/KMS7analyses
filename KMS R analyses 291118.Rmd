@@ -144,7 +144,7 @@ ________________________________________________________________________________
 ##Multivariate analyses of 2017 data only
 
 <!-- use stringsAsfactors so the 1's are numbers -->
-```{r upload data, results=FALSE}
+```{r upload KMS 2017 data, results=FALSE}
 data1 <- read.csv("KMS17_invert_data.csv", stringsAsFactors = FALSE, check.names = FALSE)
 str(data1)
 ```
@@ -305,7 +305,7 @@ ________________________________________________________________________________
 ##Species pool estimation
 
 ```{r load datafile which has species names in first column, and sites in columns}
-invertspec <- read.csv("spec_accum.csv", check.names = FALSE)
+invertspec <- read.csv("spec_accum2.csv", check.names = FALSE)
 invertspec <- invertspec[!grepl(c("^J|^B"),invertspec$LOWESTIDNC), ] 
 row.names(invertspec) <- invertspec$LOWESTIDNC
 invertspec <- invertspec[, -1]
@@ -316,6 +316,7 @@ invertspec <- t(invertspec)
 invertspec <- t(invertspec)
 invert.spec.acc2 <- iNEXT(invertspec, q=0, endpoint=150, datatype="incidence_raw") #q=0 specifies species richness, endpoint = number of samples at which to stop extrapolation
 plot(invert.spec.acc2)
+invert.spec.acc2
 ```
 
 ________________________________________________________________________________________  
@@ -370,11 +371,11 @@ ________________________________________________________________________________
 ##Ordination of combined Walyarta and KMS invertebrate data
 
 <!-- use stringsAsfactors so the 1's are numbers -->
-```{r upload data, results=FALSE}
+```{r upload KMS and Walyarta data, results=FALSE}
 kmsman <- read.csv("KMS-MAN.csv", stringsAsFactors = FALSE, check.names = FALSE)
 ```
 
-```{r strip data down to analysis matrix}
+```{r strip KMS and Walyarta data down to analysis matrix}
 kmsman2 <- kmsman[, -2] #remove species codes
 row.names(kmsman2) <-kmsman2[, 1]
 kmsman2 <- kmsman2[, -1]
@@ -394,7 +395,7 @@ samples <- gsub("-15", "Mandora 2015", samples)
 samples
 ```
 
-```{r nMDS ordination in vegan, results=FALSE}
+```{r nMDS ordination of KMS and Walyarta data in vegan, results=FALSE}
 kmsman2.mds <- metaMDS(kmsman2, distance="jaccard", k=3)
 kmsman2.pts <- as.data.frame(kmsman2.mds$points)
 ```
@@ -412,7 +413,7 @@ plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = li
 ```
 
 ###assess euler plot errors
-```{r euler plot validation}
+```{r euler plot for KMS and Walyarta data validation}
 euler.calc <- euler(con, shape = "ellipse") #separate calculation of values for statitistical assessment of plot validity
 error_plot(euler.calc, type = c("regionError", "residuals"), quantities = TRUE,
   pal = NULL) #plot errors
