@@ -404,7 +404,7 @@ print(kmsman.mds.plot)
 ```{r}
 #based on 5 samples of each types collected at the same five springs
 con <- c(A = 147, B = 55, C = 21, "A&B" = 26, "A&C"=11, "B&C" = 18, "A&B&C"=26) #A=KMS, B=Man-99, C=Man-15
-plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("Kimberley", "Mandora-2015", "Mandora-1999"), cex=1.5))
+plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("Kimberley", "Walyarta-2015", "Walyarta-1999"), cex=1.5))
 ```
 
 ###assess euler plot errors
