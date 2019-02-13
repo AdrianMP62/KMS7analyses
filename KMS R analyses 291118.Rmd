@@ -385,8 +385,8 @@ row.names(kmsman2) <- samples
 ```{r create ordination plot labels}
 samples <- str_sub(samples, -3, -1)
 samples <- gsub("-17", "Kimberley 2017", samples)
-samples <- gsub("-99", "Mandora 1999", samples)
-samples <- gsub("-15", "Mandora 2015", samples)
+samples <- gsub("-99", "Walyarta 1999", samples)
+samples <- gsub("-15", "Walyarta 2015", samples)
 samples
 ```
 
