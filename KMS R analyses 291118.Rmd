@@ -172,7 +172,7 @@ data2.pts <- as.data.frame(data2.mds$points)
 ```
 
 ```{r}
-data2.mds.plot <- ggplot(data2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour= sample.type)) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
+data2.mds.plot <- ggplot(data2.pts, aes(x=MDS1, y=MDS2)) + coord_fixed(ratio = 1)  + geom_point(aes(colour= sample.type), size=5) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
 print(data2.mds.plot)
 ```
 
@@ -202,7 +202,7 @@ data2.no1s.3Dpts <- as.data.frame(data2.no1s.3Dmds$points)
 ```
 
 ```{r}
-data2.No1s.3Dmds.plot <- ggplot(data2.no1s.3Dpts, aes(x=MDS1, y=MDS3)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2, colour= sample.type)) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
+data2.No1s.3Dmds.plot <- ggplot(data2.no1s.3Dpts, aes(x=MDS1, y=MDS3)) + coord_fixed(ratio = 1)  + geom_point(aes(colour= sample.type), size=5) + geom_text(aes(label = samples), vjust=0.5, hjust=1)
 print(data2.No1s.3Dmds.plot)
 ```
 
