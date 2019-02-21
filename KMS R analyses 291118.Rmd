@@ -30,7 +30,7 @@ And undertakes the following analyses:
 * Euler diagram for distribution of species across 3 sample types (plankton, benthic and core) 
 * Actual species accumulation over time  
 * Proportions of species known only from one area  
-* Ordination of Mandora plus Kimberley mound spring invertebrates  
+* Ordination and euler plot of Mandora plus Kimberley mound spring invertebrates  
 
 
 ```{r setup}
@@ -59,7 +59,7 @@ MgL.data <- read.csv("ionic composition mgl.csv", row.names=1)
 MgL.data <- MgL.data[, 1:9]
 ```
 
-```{r}
+```{r calculate milliequivalents}
 #create new data frame
 Meq.data <- MgL.data
 Meq.data$Na <- Meq.data$Na*0.0435
@@ -352,8 +352,8 @@ ________________________________________________________________________________
 
 ##Proportion of species known from just one of the five areas
 ```{r create new data.frame with richness by area}
-Spec.area <- data.frame("Species" = c(72,5,82,12,66,42,31,32,118,127)) #values are alternately number of species known from more than one area and then from just that area
-Spec.area$Distribution <- rep(c(">1 area" , "=1 area") , 5)
+Spec.area <- data.frame("Species" = c(72,5,82,12,66,42,31,32,140,118)) #values are alternately number of species known from more than one area and then from just that area
+Spec.area$Distribution <- rep(c(">1 area" , "= 1 area") , 5)
 Spec.area$Area <- c(rep("Area 1 (Dampier)", 2), rep("Area 2 (King Sound coast)", 2), rep("Area 3 (Central)", 2), rep("Area 4 (Kachana)", 2), rep("Area 5 (Victoria-Bonaparte)", 2))
 ```
 
