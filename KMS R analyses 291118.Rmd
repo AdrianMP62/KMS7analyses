@@ -352,8 +352,8 @@ ________________________________________________________________________________
 
 ##Proportion of species known from just one of the five areas
 ```{r create new data.frame with richness by area}
-Spec.area <- data.frame("Species" = c(84,5,106,14,73,46,37,36,140,149)) #values are alternately number of species known from more than one area and then from just that area
-Spec.area$Distribution <- rep(c(">1 area" , "= 1 area") , 5)
+Spec.area <- data.frame("Species" = c(72,5,82,12,66,42,31,32,118,127)) #values are alternately number of species known from more than one area and then from just that area
+Spec.area$Distribution <- rep(c(">1 area" , "=1 area") , 5)
 Spec.area$Area <- c(rep("Area 1 (Dampier)", 2), rep("Area 2 (King Sound coast)", 2), rep("Area 3 (Central)", 2), rep("Area 4 (Kachana)", 2), rep("Area 5 (Victoria-Bonaparte)", 2))
 ```
 
