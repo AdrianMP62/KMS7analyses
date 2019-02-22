@@ -272,7 +272,7 @@ ggplot(rich.sums.list[rich.sums.list$sample %like% "PB", ], aes(sample, richness
   theme(axis.text.x=element_text(angle = -90, vjust = 0.5)) #angle x axis labels
 ```
 
-###Compositional richness of plankton and benthic samples collected in 2017
+###Compositional richness of plankton or benthic samples collected in 2017
 ```{r plot stacked column plot, 2017 benthic/plankton data}
 ggplot(rich.sums.list[rich.sums.list$sample %like% "2017-B-|2017-P-|2017-P1|2017-P2", ], aes(sample, richness, fill=factor(taxon,levels=c("protozoans","rotifers","other","molluscs","annelids","mites","microcrustacea","macrocrustacea","insects")))) + 
   scale_fill_brewer(palette="Set1") +  #use RColourBrewer package to set colours
@@ -335,7 +335,7 @@ ________________________________________________________________________________
 
 ##Species accumlation over time
 ```{r create dataframe}
-spec.accum <- data.frame("Richness" = c(89, 162, 174, 176,	232,	279,	495))
+spec.accum <- data.frame("Richness" = c(89, 162, 174, 176,	232,	279,	501))
 spec.accum$Year <- as.Date(c('1993-10-17', '1999-9-10', '2000-10-01', '2001-07-01', '2003-09-06', '2016-05-27', '2017-08-04'))
 spec.accum$Samples <- c(3,9,10,11,12,18,44)
 ```
@@ -352,7 +352,7 @@ ________________________________________________________________________________
 
 ##Proportion of species known from just one of the five areas
 ```{r create new data.frame with richness by area}
-Spec.area <- data.frame("Species" = c(72,5,82,12,66,42,31,32,140,118)) #values are alternately number of species known from more than one area and then from just that area
+Spec.area <- data.frame("Species" = c(72,5,82,12,66,42,31,32,140,123)) #values are alternately number of species known from more than one area and then from just that area
 Spec.area$Distribution <- rep(c(">1 area" , "= 1 area") , 5)
 Spec.area$Area <- c(rep("Area 1 (Dampier)", 2), rep("Area 2 (King Sound coast)", 2), rep("Area 3 (Central)", 2), rep("Area 4 (Kachana)", 2), rep("Area 5 (Victoria-Bonaparte)", 2))
 ```
