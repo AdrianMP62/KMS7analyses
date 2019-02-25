@@ -358,11 +358,11 @@ Spec.area$Area <- c(rep("Area 1 (Dampier)", 2), rep("Area 2 (King Sound coast)",
 
 ```{r}
 ggplot(Spec.area, aes(fill=Distribution, y=Species, x=Area)) +
-    geom_bar( stat="identity", colour="black") + scale_fill_manual(values=c("#79CDCD", "#EEDC82")) + theme(axis.text.x = element_text(size=10, angle = 90, hjust = 1)) + theme(axis.title.y=element_text(size=10, margin = margin(t = 0, r = 20, b = 0, l = 0))) + theme(axis.title.x = element_blank()) + theme(legend.text = element_text(size=11)) +theme(legend.title = element_text(size=14)) + ylim(0, 250) + scale_x_discrete(labels = c("Dampier","King Sound east coast","Central","Kachana","Victoria-Bonaparte"))
+    geom_bar( stat="identity", colour="black") + scale_fill_manual(values=c("#79CDCD", "#EEDC82")) + theme(axis.text.x = element_text(size=10, angle = 90, hjust = 1)) + theme(axis.title.y=element_text(size=10, margin = margin(t = 0, r = 20, b = 0, l = 0))) + theme(axis.title.x = element_blank()) + theme(legend.text = element_text(size=11)) +theme(legend.title = element_text(size=14)) + ylim(0, 280) + scale_x_discrete(labels = c("Dampier","King Sound east coast","Central","Kachana","Victoria-Bonaparte"))
 ```
 
 __________________________________________________________________________________________
-##Ordination of combined Walyarta and KMS invertebrate data
+##Multivariate analysis of combined Walyarta and KMS invertebrate data
 
 <!-- use stringsAsfactors so the 1's are numbers -->
 ```{r upload KMS and Walyarta data, results=FALSE}
@@ -381,6 +381,12 @@ kmsman2 <- t(kmsman2)
 row.names(kmsman2) <- samples
 ```
 
+```{r Cluster analysis of Walayrta versus Kimberley mound springs}
+kmsman.bray <- vegdist(kmsman2, method="bray") #derives data from ordination analyses above.
+kmsman2.clu <- hclust(kmsman.bray, "average")
+plot(kmsman2.clu)
+```
+
 ```{r create ordination plot labels}
 samples <- str_sub(samples, -3, -1)
 samples <- gsub("-17", "Kimberley 2017", samples)
@@ -390,19 +396,11 @@ samples <- gsub("-15", "Walyarta 2015", samples)
 
 ```{r nMDS ordination of KMS and Walyarta data in vegan, results=FALSE}
 kmsman2.mds <- metaMDS(kmsman2, distance="bray", k=2)
-kmsman2.pts <- as.data.frame(kmsman2.mds$points)
 ```
 
 ```{r}
-kmsman.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2, colour=samples)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2)) + scale_size(guide = 'none') + guides(colour = guide_legend(override.aes = list(size=5)))
+kmsman.mds.plot <- ggplot(kmsman2.pts, aes(x=MDS1, y=MDS2, colour=samples)) + coord_fixed(ratio = 1)  + geom_point(aes(size=2)) + scale_size(guide = 'none') + guides(colour = guide_legend(override.aes = list(size=5))) 
 print(kmsman.mds.plot)
-```
-
-##Cluster analysis of Walayrta versus Kimberley mound springs
-```{r}
-kmsman.bray <- vegdist(kmsman2, method="bray") #derives data from ordination analyses above.
-kmsman2.clu <- hclust(kmsman.bray, "average")
-plot(kmsman2.clu)
 ```
 
 ##Euler diagram showing species overlap between Mandora and Kimberley Springs
@@ -411,9 +409,6 @@ plot(kmsman2.clu)
 con <- c(A = 152, B = 21, C = 55, "A&B" = 11, "A&C"=26, "B&C" = 18, "A&B&C"=26) #A=KMS, B=Man-99, C=Man-15
 plot(euler(con, shape = "ellipse"), edges = TRUE, quantities = TRUE, legend = list(labels = c("Kimberley", "Walyarta-1999","Walyarta-2015"), cex=1.5))
 ```
-
-
-
 
 ###assess euler plot errors
 ```{r euler plot for KMS and Walyarta data validation}
